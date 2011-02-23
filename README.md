@@ -10,6 +10,13 @@ Requirements
 * <a href="http://zeromq.org/">ØMQ</a>
 * <a href="https://github.com/zeromq/pyzmq/">PyZMQ</a>
 
+Components
+----------
+
+* Server: This is the command center. It distributes messages to all the other parts, handles auto-scaling, commands nodes to update when code changes, etc. You need one of these.
+* Fetcher: Takes urls from the Server, fetches them over http, and sends the results back. Not computationally intensive, but potentially bandwidth-heavy. You need *at least* one of these, probably more.
+* Parser: Where the magic happens. Accepts results from the Fetchers via the Server, parses them for whatever, and sends urls back to the Server for further fetching.
+
 TODO
 ----
 
