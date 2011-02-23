@@ -16,6 +16,15 @@ results_sock = ctx.socket(zmq.PUSH)
 worker_sock.connect(worker_addr)
 results_sock.connect(results_addr)
 
+url_opener = urllib2.build_opener()
+url_opener.addheaders = [('User-agent', 'BrainSnow/0.1')]
+
 while True:
 	data = worker_sock.recv()
-	print "Got data: %s" % (data)
+	
+	try:
+		f = url_opener.open(data)
+		print "Fetched: %s" % (data)
+		results_sock.send(f.read())
+	except:
+		print "Could not fetch: %s" % (data)

@@ -5,6 +5,7 @@ import zmq
 
 worker_addr = 'tcp://127.0.0.1:5555'
 results_addr = 'tcp://127.0.0.1:5556'
+first_url = "http://localhost/"
 
 print "Starting server..."
 
@@ -16,6 +17,8 @@ worker_sock.bind(worker_addr)
 results_sock.bind(results_addr)
 
 while True:
-	print "Pushing url"
-	worker_sock.send("http://www.mylesgrant.com/")
-	time.sleep(1)
+	print "Pushing url: %s" % (first_url)
+	worker_sock.send(first_url)
+	
+	data = results_sock.recv()
+	print "Got results: %s" % (data)
