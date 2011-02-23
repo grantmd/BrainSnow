@@ -1,6 +1,6 @@
 #! /usr/bin/python
 
-import time
+import time, sys
 import zmq
 import urllib2
 
@@ -27,4 +27,4 @@ while True:
 		print "Fetched: %s" % (data)
 		results_sock.send(f.read())
 	except:
-		print "Could not fetch: %s" % (data)
+		print "Could not fetch %s: %s" % (data, sys.exc_info())

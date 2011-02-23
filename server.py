@@ -3,22 +3,31 @@
 import time
 import zmq
 
-worker_addr = 'tcp://127.0.0.1:5555'
-results_addr = 'tcp://127.0.0.1:5556'
+fetcher_out_addr = 'tcp://127.0.0.1:5555'
+fetcher_in_addr = 'tcp://127.0.0.1:5556'
+parser_out_addr = 'tcp://127.0.0.1:5557'
+parser_in_addr = 'tcp://127.0.0.1:5558'
+
 first_url = "http://localhost/"
 
 print "Starting server..."
 
 ctx = zmq.Context()
-worker_sock = ctx.socket(zmq.PUSH)
-results_sock = ctx.socket(zmq.PULL)
+fetcher_out_sock = ctx.socket(zmq.PUSH)
+fetcher_in_sock = ctx.socket(zmq.PULL)
 
-worker_sock.bind(worker_addr)
-results_sock.bind(results_addr)
+fetcher_out_sock.bind(fetcher_out_addr)
+fetcher_in_sock.bind(fetcher_in_addr)
+
+parser_out_sock = ctx.socket(zmq.PUSH)
+parser_in_sock = ctx.socket(zmq.PULL)
+
+parser_out_sock.bind(parser_out_addr)
+parser_in_sock.bind(parser_in_addr)
 
 while True:
 	print "Pushing url: %s" % (first_url)
-	worker_sock.send(first_url)
+	fetcher_out_sock.send(first_url)
 	
-	data = results_sock.recv()
+	data = fetcher_in_sock.recv()
 	print "Got results: %s" % (data)
