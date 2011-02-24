@@ -17,5 +17,5 @@ results_sock.connect(results_addr)
 
 
 while True:
-	data = worker_sock.recv()
+	data = worker_sock.recv_json()
 	print "Got: %s" % (data)

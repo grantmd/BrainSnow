@@ -27,7 +27,7 @@ parser_in_sock.bind(parser_in_addr)
 
 while True:
 	print "Pushing url: %s" % (first_url)
-	fetcher_out_sock.send(first_url)
+	fetcher_out_sock.send_json({'type': 'fetch', 'url': first_url})
 	
-	data = fetcher_in_sock.recv()
-	print "Got results: %s" % (data)
+	data = fetcher_in_sock.recv_json()
+	print "Got results: %s" % (data['contents'])
