@@ -20,11 +20,17 @@ url_opener = urllib2.build_opener()
 url_opener.addheaders = [('User-agent', 'BrainSnow/0.1')]
 
 while True:
+	print "Waiting for url"
 	data = worker_sock.recv_json()
+	print "Got: %s" % (data['url'])
 	
 	try:
+		print "Fetching"
 		f = url_opener.open(data['url'])
-		print "Fetched: %s" % (data['url'])
+		print "Fetched"
+		
+		print "Sending contents"
 		results_sock.send_json({'type': 'fetch', 'contents': f.read()})
+		print "Sent"
 	except:
 		print "Could not fetch %s: %s" % (data['url'], sys.exc_info())

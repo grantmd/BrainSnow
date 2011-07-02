@@ -8,7 +8,7 @@ fetcher_in_addr = 'tcp://127.0.0.1:5556'
 parser_out_addr = 'tcp://127.0.0.1:5557'
 parser_in_addr = 'tcp://127.0.0.1:5558'
 
-first_url = "http://localhost/"
+next_url = "http://localhost/"
 
 print "Starting server..."
 
@@ -26,8 +26,20 @@ parser_out_sock.bind(parser_out_addr)
 parser_in_sock.bind(parser_in_addr)
 
 while True:
-	print "Pushing url: %s" % (first_url)
-	fetcher_out_sock.send_json({'type': 'fetch', 'url': first_url})
+	print "Pushing url: %s" % (next_url)
+	fetcher_out_sock.send_json({'type': 'fetch', 'url': next_url})
+	print "Pushed"
 	
+	print "Waiting for results"
 	data = fetcher_in_sock.recv_json()
-	print "Got results: %s" % (data['contents'])
+	print "Got results"
+	
+	print "Sending results to parser"
+	parser_out_sock.send_json({'type': 'parse', 'contents': data['contents']})
+	print "Sent"
+	
+	print "Waiting for next url from parser"
+	data = parser_in_sock.recv_json()
+	next_url = data['url']
+	print "Got next url"
+	
